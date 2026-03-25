@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube Unified Platform — Prototype</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --red: #FF0000;
+  --bg: #0f0f0f;
+  --surface: #212121;
+  --surface2: #2a2a2a;
+  --text: #fff;
+  --muted: #aaa;
+  --border: #303030;
+}
+
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Top Nav */
+.topnav {
+  background: var(--surface);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  min-width: 160px;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--red);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.search-wrap {
+  flex: 1;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.search-box {
+  background: #121212;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.search-box:hover { border-color: #555; }
+
+.search-box input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+
+.search-box input::placeholder { color: #666; }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 160px;
+  justify-content: flex-end;
+}
+
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface2);
+  border: none;
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.mode-toggle:hover { background: #383838; }
+.mode-toggle.audio-active { background: var(--red); }
+
+.user-avatar {
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, #FF0000, #990000);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Main */
+.main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  padding: 16px 0;
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 24px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.sidebar-item:hover { background: var(--surface2); }
+.sidebar-item.active { background: var(--surface); font-weight: 600; }
+.sidebar-item .icon { font-size: 20px; width: 24px; text-align: center; }
+
+.sidebar-divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+/* Content */
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* VIDEO MODE */
+.video-mode { display: block; }
+.video-mode.hide { display: none; }
+
+.video-layout {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+  gap: 24px;
+}
+
+.video-main { flex: 1; min-width: 0; }
+
+.video-player {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.video-player::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%);
+}
+
+.player-overlay {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 2;
+}
+
+.progress {
+  width: 100%;
+  height: 3px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 2px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.progress-bar {
+  width: 35%;
+  height: 100%;
+  background: var(--red);
+  border-radius: 2px;
+  position: relative;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: -3px;
+  width: 10px;
+  height: 10px;
+  background: var(--red);
+  border-radius: 50%;
+}
+
+.player-controls { display: flex; align-items: center; gap: 12px; }
+.ctrl-btn { background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; padding: 4px; }
+
+.play-btn {
+  background: var(--red);
+  border: none;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.time-display { color: rgba(255,255,255,0.8); font-size: 13px; margin-left: 4px; }
+
+.volume-area { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.volume-bar { width: 80px; height: 3px; background: rgba(255,255,255,0.3); border-radius: 2px; }
+.volume-fill { width: 70%; height: 100%; background: #fff; border-radius: 2px; }
+
+.video-info-area { padding: 16px 0; }
+.video-title-main { font-size: 20px; font-weight: 700; line-height: 1.3; margin-bottom: 12px; }
+
+.video-stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.video-stats { color: var(--muted); font-size: 14px; }
+
+.action-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.action-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface2);
+  border: none;
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.action-pill:hover { background: #383838; }
+.action-pill.red { background: var(--red); }
+.action-pill.red:hover { background: #cc0000; }
+
+.channel-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #FF0000, #990000);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.channel-details { flex: 1; }
+.channel-name-text { font-size: 15px; font-weight: 600; }
+.channel-subs { font-size: 13px; color: var(--muted); }
+
+.sub-btn {
+  background: var(--text);
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Up Next */
+.up-next { width: 380px; flex-shrink: 0; }
+.up-next-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+
+.suggestion {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 4px;
+  transition: background 0.15s;
+}
+
+.suggestion:hover { background: var(--surface2); }
+
+.thumb {
+  width: 168px;
+  height: 94px;
+  background: var(--surface2);
+  border-radius: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.sug-info { flex: 1; padding: 2px 0; }
+.sug-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; line-height: 1.3; }
+.sug-meta { font-size: 12px; color: var(--muted); }
+
+/* AUDIO MODE */
+.audio-mode { display: none; }
+.audio-mode.show { display: block; }
+
+.audio-layout {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+  gap: 24px;
+}
+
+.now-playing-panel {
+  width: 340px;
+  flex-shrink: 0;
+  background: linear-gradient(160deg, #1a0000 0%, #0d0d0d 100%);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  border: 1px solid #2a0000;
+  position: sticky;
+  top: 24px;
+  align-self: flex-start;
+}
+
+.album-art-big {
+  width: 220px;
+  height: 220px;
+  background: linear-gradient(135deg, #FF0000 0%, #660000 100%);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80px;
+  box-shadow: 0 20px 60px rgba(255,0,0,0.3);
+}
+
+.song-info-panel { text-align: center; width: 100%; }
+.song-title-big { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.song-artist-big { font-size: 14px; color: var(--muted); }
+
+.wave-viz { display: flex; gap: 3px; align-items: flex-end; height: 24px; }
+
+.wave-bar {
+  width: 4px;
+  background: var(--red);
+  border-radius: 2px;
+  animation: wave 0.8s ease infinite;
+}
+
+.wave-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
+.wave-bar:nth-child(2) { height: 18px; animation-delay: 0.1s; }
+.wave-bar:nth-child(3) { height: 22px; animation-delay: 0.2s; }
+.wave-bar:nth-child(4) { height: 14px; animation-delay: 0.3s; }
+.wave-bar:nth-child(5) { height: 20px; animation-delay: 0.15s; }
+.wave-bar:nth-child(6) { height: 10px; animation-delay: 0.25s; }
+
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1); }
+}
+
+.audio-progress { width: 100%; height: 4px; background: rgba(255,255,255,0.15); border-radius: 2px; cursor: pointer; }
+.audio-progress-fill { width: 40%; height: 100%; background: var(--red); border-radius: 2px; }
+.audio-time { display: flex; justify-content: space-between; width: 100%; font-size: 12px; color: var(--muted); margin-top: -12px; }
+
+.audio-controls { display: flex; align-items: center; gap: 16px; }
+.audio-ctrl { background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; transition: color 0.2s; }
+.audio-ctrl:hover { color: var(--text); }
+
+.audio-play-btn {
+  width: 56px;
+  height: 56px;
+  background: var(--red);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(255,0,0,0.4);
+  transition: transform 0.15s;
+}
+
+.audio-play-btn:hover { transform: scale(1.05); }
+
+.audio-browse { flex: 1; min-width: 0; }
+
+.audio-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+
+.audio-tab {
+  background: var(--surface2);
+  border: none;
+  color: var(--text);
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.audio-tab:hover { background: #383838; }
+.audio-tab.active { background: var(--red); }
+
+.browse-section { margin-bottom: 32px; }
+
+.browse-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.browse-section-title { font-size: 18px; font-weight: 700; }
+.show-all-btn { background: none; border: none; color: var(--red); font-size: 13px; font-weight: 600; cursor: pointer; }
+
+.music-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; }
+
+.music-card {
+  background: var(--surface2);
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.music-card:hover { background: #383838; transform: translateY(-2px); }
+
+.card-art {
+  width: 100%;
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, #FF0000, #660000);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.card-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.card-sub { font-size: 12px; color: var(--muted); }
+
+/* Search Page */
+.search-page {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 300;
+  overflow-y: auto;
+}
+
+.search-page.show { display: block; }
+
+.search-page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+}
+
+.back-btn { background: none; border: none; color: var(--text); font-size: 22px; cursor: pointer; padding: 4px 8px; }
+
+.search-input-main {
+  flex: 1;
+  background: #121212;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 10px 18px;
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+  max-width: 600px;
+}
+
+.search-results { max-width: 800px; margin: 0 auto; padding: 24px; }
+.search-label { font-size: 13px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+
+.search-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.search-item:hover { background: var(--surface2); }
+.search-icon { font-size: 18px; color: var(--muted); }
+.search-text { flex: 1; font-size: 15px; }
+.search-arrow { color: var(--muted); font-size: 18px; }
+
+/* Full Player */
+.full-player {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(160deg, #1a0000 0%, #0d0d0d 60%, #000 100%);
+  z-index: 400;
+  overflow-y: auto;
+}
+
+.full-player.show { display: flex; flex-direction: column; align-items: center; padding: 40px 24px; gap: 24px; }
+
+.player-topbar { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 480px; }
+.player-back { background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
+.player-playlist-label { font-size: 11px; color: var(--muted); text-align: center; letter-spacing: 1px; text-transform: uppercase; }
+.player-playlist-name { font-size: 13px; font-weight: 600; text-align: center; }
+.player-menu { background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
+
+.full-album-art {
+  width: 280px;
+  height: 280px;
+  background: linear-gradient(135deg, #FF0000 0%, #660000 100%);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 100px;
+  box-shadow: 0 30px 80px rgba(255,0,0,0.4);
+}
+
+.full-song-info { text-align: center; }
+.full-song-title { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+.full-song-artist { font-size: 15px; color: var(--muted); }
+
+.full-progress-area { width: 100%; max-width: 480px; }
+.full-progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; cursor: pointer; }
+.full-progress-fill { width: 35%; height: 100%; background: var(--red); border-radius: 2px; }
+.full-time { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+.full-controls { display: flex; align-items: center; gap: 24px; }
+.full-ctrl-btn { background: none; border: none; color: var(--muted); font-size: 24px; cursor: pointer; transition: color 0.2s; }
+.full-ctrl-btn:hover { color: var(--text); }
+
+.full-play-btn {
+  width: 64px;
+  height: 64px;
+  background: var(--red);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 26px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 24px rgba(255,0,0,0.5);
+  transition: transform 0.15s;
+}
+
+.full-play-btn:hover { transform: scale(1.05); }
+
+.full-actions { display: flex; gap: 32px; }
+
+.full-action-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.full-action-btn:hover { color: var(--text); }
+.full-action-icon { font-size: 24px; }
+
+/* Bottom Player */
+.bottom-player-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1a1a1a;
+  border-top: 1px solid var(--border);
+  padding: 12px 24px;
+  z-index: 150;
+  align-items: center;
+  gap: 16px;
+}
+
+.bottom-player-bar.show { display: flex; }
+
+.bp-art { width: 44px; height: 44px; background: linear-gradient(135deg,#FF0000,#660000); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.bp-info { flex: 1; min-width: 0; }
+.bp-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bp-artist { font-size: 12px; color: var(--muted); }
+.bp-controls { display: flex; align-items: center; gap: 12px; }
+.bp-ctrl { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; }
+.bp-play { width: 40px; height: 40px; background: var(--red); border: none; border-radius: 50%; color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+.bp-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--border); }
+.bp-progress-fill { width: 40%; height: 100%; background: var(--red); }
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .topnav { padding: 10px 16px; }
+  .logo { min-width: auto; font-size: 18px; }
+  .nav-right { min-width: auto; }
+  .search-wrap { display: none; }
+  .mode-toggle span:last-child { display: none; }
+  .mode-toggle { padding: 8px 12px; }
+
+  .video-layout { flex-direction: column; padding: 0 0 80px; gap: 0; }
+  .video-player { border-radius: 0; font-size: 40px; }
+  .video-title-main { font-size: 16px; }
+  .video-info-area { padding: 12px 16px; }
+  .channel-row { padding: 12px 16px; }
+  .up-next { width: 100%; padding: 0 16px 16px; }
+
+  .audio-layout { flex-direction: column; padding: 16px 16px 80px; }
+  .now-playing-panel { width: 100%; position: static; padding: 24px; }
+  .album-art-big { width: 160px; height: 160px; font-size: 60px; }
+
+  .music-grid { grid-template-columns: repeat(2, 1fr); }
+  .full-album-art { width: 220px; height: 220px; font-size: 80px; }
+  .full-controls { gap: 16px; }
+  .search-page-header { padding: 12px 16px; }
+  .bottom-player-bar { padding: 10px 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+  <nav class="topnav">
+    <div class="logo">
+      <div class="logo-icon">▶</div>
+      <span>YouTube</span>
+    </div>
+    <div class="search-wrap">
+      <div class="search-box" onclick="openSearch()">
+        <span>🔍</span>
+        <input type="text" placeholder="Search YouTube" readonly>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button class="mode-toggle" id="modeToggleBtn" onclick="toggleMode()">
+        <span id="modeIcon">🎵</span>
+        <span id="modeLabel">Audio Mode</span>
+      </button>
+      <div class="user-avatar">A</div>
+    </div>
+  </nav>
+
+  <div class="main">
+    <aside class="sidebar">
+      <div class="sidebar-item active"><span class="icon">🏠</span> Home</div>
+      <div class="sidebar-item"><span class="icon">🔥</span> Trending</div>
+      <div class="sidebar-item"><span class="icon">📺</span> Subscriptions</div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-item"><span class="icon">📚</span> Library</div>
+      <div class="sidebar-item"><span class="icon">🕐</span> History</div>
+      <div class="sidebar-item"><span class="icon">❤️</span> Liked Videos</div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-item"><span class="icon">🎵</span> Music</div>
+      <div class="sidebar-item"><span class="icon">🎬</span> Movies</div>
+      <div class="sidebar-item"><span class="icon">🎙️</span> Podcasts</div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-item"><span class="icon">⚙️</span> Settings</div>
+    </aside>
+
+    <div class="content-area">
+
+      <!-- VIDEO MODE -->
+      <div class="video-mode" id="videoMode">
+        <div class="video-layout">
+          <div class="video-main">
+            <div class="video-player">
+              🎥
+              <div class="player-overlay">
+                <div class="progress"><div class="progress-bar"></div></div>
+                <div class="player-controls">
+                  <button class="play-btn">▶</button>
+                  <button class="ctrl-btn">⏭</button>
+                  <span class="time-display">2:18 / 5:30</span>
+                  <div class="volume-area">
+                    <span class="ctrl-btn">🔊</span>
+                    <div class="volume-bar"><div class="volume-fill"></div></div>
+                  </div>
+                  <button class="ctrl-btn">⛶</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="video-info-area">
+              <div class="video-title-main">Enjoy Enjaami — Official Video (Prod. by Santhosh Narayanan)</div>
+              <div class="video-stats-row">
+                <div class="video-stats">12M views &nbsp;·&nbsp; 2 days ago</div>
+                <div class="action-row">
+                  <button class="action-pill">👍 2.1M</button>
+                  <button class="action-pill">💬 Share</button>
+                  <button class="action-pill">📥 Save</button>
+                  <button class="action-pill red" onclick="openFullPlayer()">🎵 Switch to Audio</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="channel-row">
+              <div class="avatar">D</div>
+              <div class="channel-details">
+                <div class="channel-name-text">Dhee Official</div>
+                <div class="channel-subs">2.5M subscribers</div>
+              </div>
+              <button class="sub-btn">Subscribe</button>
+            </div>
+          </div>
+
+          <div class="up-next">
+            <div class="up-next-title">Up next</div>
+            <div class="suggestion"><div class="thumb">🎵</div><div class="sug-info"><div class="sug-title">Vaathi Coming - Full Video Song</div><div class="sug-meta">Anirudh · 45M views</div></div></div>
+            <div class="suggestion"><div class="thumb">🎧</div><div class="sug-info"><div class="sug-title">Rain Sounds - 10 Hours Deep Focus</div><div class="sug-meta">Nature Sounds · 89M views</div></div></div>
+            <div class="suggestion"><div class="thumb">💭</div><div class="sug-info"><div class="sug-title">Morning Motivation — Start Your Day</div><div class="sug-meta">MotivHub · 5M views</div></div></div>
+            <div class="suggestion"><div class="thumb">🌙</div><div class="sug-info"><div class="sug-title">ASMR Tapping & Scratching Sounds</div><div class="sug-meta">ASMR Studio · 12M views</div></div></div>
+            <div class="suggestion"><div class="thumb">🎬</div><div class="sug-info"><div class="sug-title">Leo - Official Teaser | Thalapathy Vijay</div><div class="sug-meta">Sun Pictures · 120M views</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AUDIO MODE -->
+      <div class="audio-mode" id="audioMode">
+        <div class="audio-layout">
+          <div class="now-playing-panel">
+            <div class="album-art-big">🎬</div>
+            <div class="song-info-panel">
+              <div class="song-title-big">Enjoy Enjaami</div>
+              <div class="song-artist-big">Dhee ft. Arivu · Santhosh Narayanan</div>
+            </div>
+            <div class="wave-viz">
+              <div class="wave-bar"></div><div class="wave-bar"></div>
+              <div class="wave-bar"></div><div class="wave-bar"></div>
+              <div class="wave-bar"></div><div class="wave-bar"></div>
+            </div>
+            <div class="audio-progress"><div class="audio-progress-fill"></div></div>
+            <div class="audio-time"><span>1:44</span><span>3:27</span></div>
+            <div class="audio-controls">
+              <button class="audio-ctrl">🔀</button>
+              <button class="audio-ctrl">⏮</button>
+              <button class="audio-play-btn">▶</button>
+              <button class="audio-ctrl">⏭</button>
+              <button class="audio-ctrl">🔁</button>
+            </div>
+          </div>
+
+          <div class="audio-browse">
+            <div class="audio-tabs">
+              <button class="audio-tab active">All</button>
+              <button class="audio-tab">Songs</button>
+              <button class="audio-tab">Podcasts</button>
+              <button class="audio-tab">Favourites</button>
+              <button class="audio-tab">New Releases</button>
+            </div>
+
+            <div class="browse-section">
+              <div class="browse-section-header">
+                <div class="browse-section-title">Tamil Hits 🔥</div>
+                <button class="show-all-btn">Show all</button>
+              </div>
+              <div class="music-grid">
+                <div class="music-card"><div class="card-art">🎵</div><div class="card-title">Leo BGM</div><div class="card-sub">Anirudh</div></div>
+                <div class="music-card"><div class="card-art" style="background:linear-gradient(135deg,#FF6B00,#660000)">🎵</div><div class="card-title">Jailer Theme</div><div class="card-sub">Anirudh</div></div>
+                <div class="music-card"><div class="card-art" style="background:linear-gradient(135deg,#9900FF,#330066)">🎵</div><div class="card-title">Arabic Kuthu</div><div class="card-sub">Beast</div></div>
+                <div class="music-card"><div class="card-art" style="background:linear-gradient(135deg,#FF0066,#660022)">🎵</div><div class="card-title">Kaavaalaa</div><div class="card-sub">Jailer</div></div>
+              </div>
+            </div>
+
+            <div class="browse-section">
+              <div class="browse-section-header">
+                <div class="browse-section-title">Podcasts 🎙️</div>
+                <button class="show-all-btn">Show all</button>
+              </div>
+              <div class="music-grid">
+                <div class="music-card"><div class="card-art" style="background:linear-gradient(135deg,#0055FF,#001166)">🎙️</div><div class="card-title">Tech Talk</div><div class="card-sub">Ep. 42 · 1hr 20min</div></div>
+                <div class="music-card"><div class="card-art" style="background:linear-gradient(135deg,#FF6600,#663300)">🎙️</div><div class="card-title">Cinema Vikatan</div><div class="card-sub">Ep. 108 · 45min</div></div>
+                <div class="music-card"><div class="card-art" style="background:linear-gradient(135deg,#00AA55,#004422)">🎙️</div><div class="card-title">Huberman Lab</div><div class="card-sub">Ep. 201 · 2hr</div></div>
+                <div class="music-card"><div class="card-art" style="background:linear-gradient(135deg,#AA00FF,#440066)">🎙️</div><div class="card-title">Lex Fridman</div><div class="card-sub">Ep. 389 · 3hr</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Player -->
+<div class="bottom-player-bar" id="bottomPlayerBar">
+  <div class="bp-progress"><div class="bp-progress-fill"></div></div>
+  <div class="bp-art">🎵</div>
+  <div class="bp-info">
+    <div class="bp-title">Enjoy Enjaami</div>
+    <div class="bp-artist">Dhee ft. Arivu</div>
+  </div>
+  <div class="bp-controls">
+    <button class="bp-ctrl">⏮</button>
+    <button class="bp-play" onclick="openFullPlayer()">▶</button>
+    <button class="bp-ctrl">⏭</button>
+  </div>
+</div>
+
+<!-- Full Player -->
+<div class="full-player" id="fullPlayer">
+  <div class="player-topbar">
+    <button class="player-back" onclick="closeFullPlayer()">←</button>
+    <div>
+      <div class="player-playlist-label">PLAYING FROM PLAYLIST</div>
+      <div class="player-playlist-name">Tamil Party Time</div>
+    </div>
+    <button class="player-menu">⋮</button>
+  </div>
+  <div class="full-album-art">🎬</div>
+  <div class="full-song-info">
+    <div class="full-song-title">Enjoy Enjaami</div>
+    <div class="full-song-artist">Dhee ft. Arivu · Santhosh Narayanan</div>
+  </div>
+  <div class="full-progress-area">
+    <div class="full-progress-bar"><div class="full-progress-fill"></div></div>
+    <div class="full-time"><span>1:44</span><span>3:27</span></div>
+  </div>
+  <div class="full-controls">
+    <button class="full-ctrl-btn">🔀</button>
+    <button class="full-ctrl-btn">⏮</button>
+    <button class="full-play-btn">▶</button>
+    <button class="full-ctrl-btn">⏭</button>
+    <button class="full-ctrl-btn">🔁</button>
+  </div>
+  <div class="full-actions">
+    <button class="full-action-btn"><span class="full-action-icon">❤️</span><span>Like</span></button>
+    <button class="full-action-btn"><span class="full-action-icon">💬</span><span>Comment</span></button>
+    <button class="full-action-btn"><span class="full-action-icon">↗️</span><span>Share</span></button>
+    <button class="full-action-btn"><span class="full-action-icon">⬇️</span><span>Save</span></button>
+  </div>
+</div>
+
+<!-- Search Page -->
+<div class="search-page" id="searchPage">
+  <div class="search-page-header">
+    <button class="back-btn" onclick="closeSearch()">←</button>
+    <input type="text" class="search-input-main" placeholder="Search YouTube" autofocus>
+    <span style="font-size:22px;cursor:pointer;">🎤</span>
+  </div>
+  <div class="search-results">
+    <div class="search-label">You may like</div>
+    <div class="search-item"><span class="search-icon">🔍</span><span class="search-text">tamil songs</span><span class="search-arrow">↗</span></div>
+    <div class="search-item"><span class="search-icon">🔍</span><span class="search-text">anirudh hits 2024</span><span class="search-arrow">↗</span></div>
+    <div class="search-item"><span class="search-icon">🔍</span><span class="search-text">ar rahman songs</span><span class="search-arrow">↗</span></div>
+    <div class="search-item"><span class="search-icon">🔍</span><span class="search-text">ilayaraja melodies</span><span class="search-arrow">↗</span></div>
+    <div class="search-item"><span class="search-icon">🔍</span><span class="search-text">yuvan shankar raja</span><span class="search-arrow">↗</span></div>
+    <div class="search-item"><span class="search-icon">🔍</span><span class="search-text">harris jayaraj hits</span><span class="search-arrow">↗</span></div>
+    <div class="search-item"><span class="search-icon">🔍</span><span class="search-text">gv prakash songs</span><span class="search-arrow">↗</span></div>
+  </div>
+</div>
+
+<script>
+let currentMode = 'video';
+
+function toggleMode() {
+  const btn = document.getElementById('modeToggleBtn');
+  const icon = document.getElementById('modeIcon');
+  const label = document.getElementById('modeLabel');
+  if (currentMode === 'video') {
+    document.getElementById('videoMode').classList.add('hide');
+    document.getElementById('audioMode').classList.add('show');
+    document.getElementById('bottomPlayerBar').classList.add('show');
+    btn.classList.add('audio-active');
+    icon.textContent = '📹';
+    label.textContent = 'Video Mode';
+    currentMode = 'audio';
+  } else {
+    document.getElementById('videoMode').classList.remove('hide');
+    document.getElementById('audioMode').classList.remove('show');
+    document.getElementById('bottomPlayerBar').classList.remove('show');
+    document.getElementById('fullPlayer').classList.remove('show');
+    btn.classList.remove('audio-active');
+    icon.textContent = '🎵';
+    label.textContent = 'Audio Mode';
+    currentMode = 'video';
+  }
+  window.scrollTo(0, 0);
+}
+
+function openFullPlayer() { document.getElementById('fullPlayer').classList.add('show'); }
+function closeFullPlayer() { document.getElementById('fullPlayer').classList.remove('show'); }
+function openSearch() { document.getElementById('searchPage').classList.add('show'); }
+function closeSearch() { document.getElementById('searchPage').classList.remove('show'); }
+
+document.querySelectorAll('.audio-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.audio-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>
