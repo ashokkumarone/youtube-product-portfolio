@@ -28,10 +28,10 @@ These are **not fan concepts**. Each study identifies a real platform problem, p
 **Files:**
 - `YouTube_Unified_Platform_Strategy.pdf` — Full product strategy deck
 - `YouTube_Unified_Platform_Project.pdf` — Detailed project document
-- `YouTube_Complete_Prototype(mobile App).html` — **Working interactive mobile prototype** ← Open this in browser
+- `YouTube_Complete_Prototype(mobile App).html` — **Working interactive mobile prototype** ← Open this in browser.
 - `YouTube_Complete_Prototype_v2.html` — Advanced **Desktop UI prototype** with multi-pane strategy and refined Dark Mode (#121212). 
 
-> 💡 Open `YouTube_Complete_Prototype.html` in any browser to interact with the prototype. Includes working Video/Audio Mode toggle, full-screen player, and search page.
+> 💡 Open `YouTube_Complete_Prototype(mobile app).html` (or) `YouTube_Complete_Prototype_v2.html`  in any browser to interact with the prototype. Includes working Video/Audio Mode toggle, full-screen player, and search page.
 
 ---
 
@@ -72,9 +72,9 @@ These are **not fan concepts**. Each study identifies a real platform problem, p
 
 ## 🚀 How to View
 
-1. **Strategy decks** → Open `.pptx` files in PowerPoint or Google Slides
-2. **Interactive prototype** → Open `YouTube_Complete_Prototype.html` in Chrome/Safari
-3. **Project document** → Open `.docx` in Word or Google Docs
+1. **Strategy decks** → Open `.pdf` files in PowerPoint or Google Slides
+2. **Interactive prototype** → Open `.html` files in any browser (Chrome/Safari recommended
+3. **Project document** → Open `.pdf` in Word or Google Docs
 
 ---
 
