@@ -29,7 +29,7 @@ These are **not fan concepts**. Each study identifies a real platform problem, p
 - `YouTube_Unified_Platform_Strategy.pdf` — Full product strategy deck
 - `YouTube_Unified_Platform_Project.pdf` — Detailed project document
 - `YouTube_Complete_Prototype(mobile App).html` — **Working interactive mobile prototype** ← Open this in browser.
-- `YouTube_Complete_Prototype_v2.html` — Advanced **Desktop UI prototype** with multi-pane strategy and refined Dark Mode (#121212). 
+- `YouTube_Complete_Prototype_v2.html` — Advanced **Desktop UI prototype**← Open this in browser.
 
 > 💡 Open `YouTube_Complete_Prototype(mobile app).html` (or) `YouTube_Complete_Prototype_v2.html`  in any browser to interact with the prototype. Includes working Video/Audio Mode toggle, full-screen player, and search page.
 
