@@ -1,80 +1,59 @@
-
 # 📱 YouTube Product Strategy Portfolio
 
-**Ashok Kumar S** · Product Strategy | AI Product Thinking | UX Innovation  
+**Ashok Kumar S** · Product Strategy | Data-Driven Innovation | UX Analyst  
 [LinkedIn](https://linkedin.com/in/ashokkumarone) · Tamil Nadu, India
 
 ---
 
-## Overview
+## 🚀 Overview
 
-This repository contains two independent product strategy case studies for YouTube — built as a portfolio to demonstrate product thinking, user behavior analysis, and platform-level innovation.
-
-These are **not fan concepts**. Each study identifies a real platform problem, proposes a structured solution, and estimates business impact.
+This portfolio features two independent product strategy case studies for YouTube. [span_0](start_span)[span_1](start_span)Each project identifies a high-impact platform gap, proposes a behavioral framework, and estimates business outcomes using data-driven reasoning[span_0](end_span)[span_1](end_span).
 
 ---
 
-## 📂 Projects
+## 📂 Project 1: YouTube Unified Platform (Consolidation Strategy)
 
-### 1. YouTube Unified Platform — Consolidation Strategy
+**[span_2](start_span)[span_3](start_span)[span_4](start_span)Problem:** Fragmentation between YouTube Music, OTT content, and UGC, leading to user friction and resource inefficiency like battery and data drainage[span_2](end_span)[span_3](end_span)[span_4](end_span).
 
-**Problem:** YouTube's content library is larger than Netflix + Spotify combined — yet users maintain separate subscriptions for each. YouTube Music, OTT content, and UGC exist in silos, creating unnecessary fragmentation.
+**Key Innovations:**
+* **[span_5](start_span)[span_6](start_span)[span_7](start_span)Audio Mode Toggle:** One-click battery-efficient playback with 60–70% battery reduction[span_5](end_span)[span_6](end_span)[span_7](end_span).
+* **[span_8](start_span)[span_9](start_span)Auto-Switch Logic:** Intelligent mode transitions based on device state like Lock screen or Low battery[span_8](end_span)[span_9](end_span).
+* **[span_10](start_span)[span_11](start_span)Unified Library:** Integrated navigation for Music, Movies, Series, and UGC[span_10](end_span)[span_11](end_span).
 
-**Proposed Solution:** A single unified app architecture with:
-- **Audio Mode Toggle** — one-click switch to audio-only playback (60–70% battery reduction)
-- **Consolidated Library** — Music, Movies, Series, and UGC under one navigation
-- **Smart Categorization** — Songs, Podcasts, Favourites, New Releases in Audio Mode
-- **Premium Integration** — background playback + offline downloads
-
-**Files:**
-- `YouTube_Unified_Platform_Strategy.pptx` — Full product strategy deck
-- `YouTube_Unified_Platform_Project_v2-1.docx` — Detailed project document
-- `YouTube_Complete_Prototype.html` — **Working interactive mobile prototype** ← Open this in browser
-
-> 💡 Open `YouTube_Complete_Prototype.html` in any browser to interact with the prototype. Includes working Video/Audio Mode toggle, full-screen player, and search page.
+**Interactive Prototypes & Reports:**
+* [span_12](start_span)📱 **Mobile App Experience:** [YouTube_Complete_Prototype(mobile App).html](./YouTube_Complete_Prototype(mobile%20App).html)[span_12](end_span)
+* [span_13](start_span)💻 **Desktop Web Experience:** [YouTube_Complete_Prototype_v2.html](./YouTube_Complete_Prototype_v2.html)[span_13](end_span)
+* [span_14](start_span)📄 **Strategy Report (PDF):** [YouTube_Unified_Platform_Project.pdf](./YouTube_Unified_Platform_Project.pdf)[span_14](end_span)
+* [span_15](start_span)📊 **Presentation Deck (PDF):** [YouTube_Unified_Platform_Strategy.pdf](./YouTube_Unified_Platform_Strategy.pdf)[span_15](end_span)
 
 ---
 
-### 2. YouTube Active Audience & Creator Fairness Model
+## 📂 Project 2: Active Audience & Creator Fairness Model
 
-**Problem:** Subscriber count ≠ Active audience. Inactive subscribers accumulate over time, distorting engagement metrics, misleading advertisers, and disadvantaging small creators in the algorithm.
+**[span_16](start_span)[span_17](start_span)Problem:** Subscriber count inflation distorts engagement metrics and disadvantages small creators[span_16](end_span)[span_17](end_span).
 
-**Core Insight:** A channel with 100K subscribers but 5K active viewers has 5% engagement density — far weaker than a 50K channel with 40K active viewers (80% density).
+**Strategic Solution:**
+* **[span_18](start_span)Engagement Density Metric:** Shifting focus from vanity numbers to behavioral depth[span_18](end_span).
+* **[span_19](start_span)[span_20](start_span)[span_21](start_span)Behavioral Scoring Engine:** Classifying subscribers into Active, Semi-Active, and Inactive based on revisit rate and watch duration[span_19](end_span)[span_20](end_span)[span_21](end_span).
+* **[span_22](start_span)Inactivity Trigger:** A 90-day inactivity prompt to preserve user autonomy and algorithm hygiene[span_22](end_span).
 
-**Proposed Solution:** Engagement-based subscriber classification framework:
-- **Behavioral Scoring Engine** — watch frequency, duration, likes, revisit rate
-- **3-Tier Classification** — Active / Semi-Active / Inactive
-- **90-Day Inactivity Trigger** — user prompt instead of auto-removal (preserves autonomy)
-- **Engagement-Weighted Feed** — active subscriptions prioritized, without removing user control
-- **Active Audience Dashboard** — new analytics metric for creators and advertisers
+**Business Impact:**
+* [span_23](start_span)📈 **5–12%** improvement in watch-time efficiency[span_23](end_span).
+* [span_24](start_span)🎯 **8–15%** increase in ad targeting accuracy[span_24](end_span).
 
-**Estimated Impact:**
-- 5–12% watch-time efficiency improvement
-- 8–15% ad targeting accuracy improvement
-- Higher CPM rates + increased advertiser trust
-
-**File:**
-- `YouTube_Active_Audience_Framework.pptx` — Full case study with phased rollout strategy
+**Detailed Framework:**
+* [span_25](start_span)📄 **Analysis Report (PDF):** [YouTube_Active_Audience_Framework.pdf](./YouTube_Active_Audience_Framework.pdf)[span_25](end_span)
 
 ---
 
-## 🛠 Skills Demonstrated
+## 🛠️ Technical Skills Demonstrated
 
 | Area | Details |
 |------|---------|
-| Product Thinking | Problem definition → solution → business impact |
-| User Behavior Analysis | Engagement decay modeling, behavioral scoring |
-| Platform Strategy | Competitive positioning, monetization logic |
-| Prototyping | Interactive HTML/CSS/JS mobile prototype |
-| Data Reasoning | Engagement density metric, impact estimation |
-
----
-
-## 🚀 How to View
-
-1. **Strategy decks** → Open `.pptx` files in PowerPoint or Google Slides
-2. **Interactive prototype** → Open `YouTube_Complete_Prototype.html` in Chrome/Safari
-3. **Project document** → Open `.docx` in Word or Google Docs
+| **Product Thinking** | [span_26](start_span)[span_27](start_span)Problem definition → solution → business impact[span_26](end_span)[span_27](end_span). |
+| **User Behavior Analysis** | [span_28](start_span)[span_29](start_span)[span_30](start_span)Engagement decay modeling and behavioral scoring[span_28](end_span)[span_29](end_span)[span_30](end_span). |
+| **Platform Strategy** | [span_31](start_span)[span_32](start_span)Competitive positioning and monetization logic[span_31](end_span)[span_32](end_span). |
+| **UX Prototyping** | [span_33](start_span)Multi-device interactive UI development using HTML/CSS/JS[span_33](end_span). |
 
 ---
 
