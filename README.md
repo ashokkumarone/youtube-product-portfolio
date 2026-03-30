@@ -72,9 +72,9 @@ These are **not fan concepts**. Each study identifies a real platform problem, p
 
 ## 🚀 How to View
 
-1. **Strategy decks** → Open `.pdf` files in PowerPoint or Google Slides
+1. **Strategy decks** → Open `.pdf` files in any PDF viewer (Adobe Reader / Browser)
 2. **Interactive prototype** → Open `.html` files in any browser (Chrome/Safari recommended
-3. **Project document** → Open `.pdf` in Word or Google Docs
+3. **Project document** → Open `.pdf` files in any PDF viewer or Google Docs
 
 ---
 
